@@ -1,4 +1,4 @@
-package spotify.apiautomation.tests;
+package com.spotify.apiautomation.tests;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
