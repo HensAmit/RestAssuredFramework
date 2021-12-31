@@ -1,56 +1,26 @@
 package com.spotify.apiautomation.api.applicationAPI;
 
+import com.spotify.apiautomation.api.RestResource;
 import com.spotify.apiautomation.pojo.Playlist;
 import io.restassured.response.Response;
 
-import static com.spotify.apiautomation.api.SpecBuilder.getRequestSpec;
-import static com.spotify.apiautomation.api.SpecBuilder.getResponseSpec;
-import static io.restassured.RestAssured.given;
-
 public class PlaylistAPI {
-    static String accessToken = "BQBx2QopMfS9WKP2VDrF32mgMqAk509KqFUEh2ZYH5NdS486HSSDdwj9b9H2256qlJoazjRjBMcRl0_pVC4raAXCf32ZE8mfN-lNKEHgSNZYsBEv9fS5swd15cIVF87tqkZNOmmkt2DjaOKRRZaufzHHUbELkiOFdHbaRQOGcHIU-Z8LOdANTFTcIw7_0GBbfYQ7xYxfJoyNmAAVDDx9K_KjbevEs-f2w--LpaltWh-DxSIo";
+    static String accessToken = "BQDUXiG5WX8LNmky-hqc_iDjcR5lZZ1uhUpXbFdmwQtRl_uZ6zdwx8myqJ11Eyvi9wX_U5KLux-Qgm0bpfxsviPlmKGiLeaCzCn7Gc-VfPZsdK1kzBETnXbwT30mygCYjDs-0uSQcTlLccY2xL1BmQv19N9SayWDrxzVLg74COesx5i2ZdTLrqjlAvTXvIK4gYJWyRN5v7YnIYy9V95my-LP1PDZu1gFWGQnEkVNK-Aob-k0";
 
     public static Response post(Playlist requestPlaylist){
-        return given(getRequestSpec())
-                    .header("Authorization", "Bearer "+accessToken)
-                    .body(requestPlaylist).
-               when()
-                    .post("/users/3133u3fxpnaisnp6inrt3t6fxrvm/playlists").
-               then()
-                    .spec(getResponseSpec())
-                    .extract().response();
+        return RestResource.post(accessToken, "/users/3133u3fxpnaisnp6inrt3t6fxrvm/playlists", requestPlaylist);
     }
 
     //Overloaded to test invalid token scenario
     public static Response post(Playlist requestPlaylist, String invalidAccessToken){
-        return given(getRequestSpec())
-                    .header("Authorization", "Bearer "+invalidAccessToken)
-                    .body(requestPlaylist).
-               when()
-                    .post("/users/3133u3fxpnaisnp6inrt3t6fxrvm/playlists").
-               then()
-                    .spec(getResponseSpec())
-                    .extract().response();
+        return RestResource.post(invalidAccessToken, "/users/3133u3fxpnaisnp6inrt3t6fxrvm/playlists", requestPlaylist);
     }
 
     public static Response get(String playlistId){
-        return given(getRequestSpec())
-                    .header("Authorization", "Bearer "+accessToken).
-               when()
-                    .get("/playlists/"+playlistId).
-               then()
-                    .spec(getResponseSpec())
-                    .extract().response();
+        return RestResource.get(accessToken, "/playlists/"+playlistId);
     }
 
     public static Response update(Playlist requestPlaylist, String playlistId){
-        return given(getRequestSpec())
-                    .header("Authorization", "Bearer "+accessToken)
-                    .body(requestPlaylist).
-               when()
-                    .put("/playlists/"+playlistId).
-               then()
-                    .spec(getResponseSpec())
-                    .extract().response();
+        return RestResource.update(accessToken, "/playlists/"+playlistId, requestPlaylist);
     }
 }
