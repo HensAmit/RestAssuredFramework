@@ -2,14 +2,35 @@ package com.spotify.apiautomation.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-
+import java.time.Instant;
 import java.util.HashMap;
 
 import static com.spotify.apiautomation.api.SpecBuilder.getResponseSpec;
 import static io.restassured.RestAssured.given;
 
 public class TokenManager {
-    public static String renewToken(){
+    private static String accessToken;
+    private static Instant expiryTime;
+
+    public static String getToken(){
+        try{
+            if(accessToken==null || Instant.now().isAfter(expiryTime)){
+                System.out.println("Renewing token...");
+                Response response = renewToken();
+                accessToken = response.path("access_token");
+                int expiryDurationInSeconds = response.path("expires_in");
+                expiryTime = Instant.now().plusSeconds(expiryDurationInSeconds - 300);//300 sec = 5 mins buffer time
+            } else{
+                System.out.println("Token is valid and good to use");
+            }
+        }
+        catch(Exception e){
+            throw new RuntimeException("ABORT!! Failed to get the token!!");
+        }
+        return accessToken;
+    }
+
+    private static Response renewToken(){
         HashMap<String, String> formParams = new HashMap<>();
         formParams.put("grant_type", "refresh_token");
         formParams.put("refresh_token", "AQB9N2Nlcd8JqSfB-TW-4m9-feqbiGTzXShfdeRHvCJq5FHkHtgm_5byYvhU042lvKzGWIdSig0wZ15cX5wLLA1u_4KKtB7QIojYY-UtvllUdKp5tHVO8WiQd1ccJC_hWB0");
@@ -30,6 +51,6 @@ public class TokenManager {
             throw new RuntimeException("ABORT!!! Renew token failed!!");
         }
 
-        return response.path("access_token");
+        return response;
     }
 }
