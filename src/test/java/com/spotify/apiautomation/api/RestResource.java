@@ -1,6 +1,8 @@
 package com.spotify.apiautomation.api;
 
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import java.util.HashMap;
 
 import static com.spotify.apiautomation.api.SpecBuilder.getRequestSpec;
 import static com.spotify.apiautomation.api.SpecBuilder.getResponseSpec;
@@ -35,6 +37,19 @@ public class RestResource {
                     .body(requestBodyObject).
                when()
                     .put(path).
+               then()
+                    .spec(getResponseSpec())
+                    .extract().response();
+    }
+
+    public static Response postAccount(HashMap<String, String> formParams, String path){
+        return given()
+                    .baseUri("https://accounts.spotify.com")
+                    .contentType(ContentType.URLENC)
+                    .formParams(formParams)
+                    .log().all().
+               when()
+                    .post(path).
                then()
                     .spec(getResponseSpec())
                     .extract().response();
