@@ -3,6 +3,7 @@ package com.spotify.apiautomation.tests;
 import com.spotify.apiautomation.api.applicationAPI.PlaylistAPI;
 import com.spotify.apiautomation.pojo.Error;
 import com.spotify.apiautomation.pojo.Playlist;
+import com.spotify.apiautomation.utils.DataLoader;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
@@ -38,7 +39,7 @@ public class PlaylistTests {
                         .setDescription("Amits 1st playlist updated")
                         .setPublic(false);
 
-        Response response = PlaylistAPI.get("0fYUt3c4IfZ52WkKGPTa2z");
+        Response response = PlaylistAPI.get(DataLoader.getInstance().getGetPlaylistId());
         assertThat(response.statusCode(), equalTo(200));
 
         Playlist responsePlaylist = response.as(Playlist.class);
@@ -55,7 +56,7 @@ public class PlaylistTests {
                         .setDescription("Amits 2nd playlist")
                         .setPublic(false);
 
-        Response response = PlaylistAPI.update(requestPlaylist, "1IxlpwMnTLzSJICji9OG1r");
+        Response response = PlaylistAPI.update(requestPlaylist, DataLoader.getInstance().getUpdatePlaylistId());
         assertThat(response.statusCode(), equalTo(200));
     }
 
