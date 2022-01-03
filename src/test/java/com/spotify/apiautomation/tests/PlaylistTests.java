@@ -4,6 +4,7 @@ import com.spotify.apiautomation.api.applicationAPI.PlaylistAPI;
 import com.spotify.apiautomation.pojo.Error;
 import com.spotify.apiautomation.pojo.Playlist;
 import com.spotify.apiautomation.utils.DataLoader;
+import io.qameta.allure.Description;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
@@ -15,7 +16,8 @@ import static org.hamcrest.MatcherAssert.*;
 
 public class PlaylistTests {
 
-    @Test
+    @Description("Some test descriptions in detail")
+    @Test (description = "Create a Playlist")
     public void shouldBeAbleToCreateAPlaylist(){
         Playlist requestPlaylist = playListBuilder("Playlist 4", "my 4th playlist", false);
 
@@ -26,7 +28,8 @@ public class PlaylistTests {
         assertPlaylistEqual(responsePlaylist, requestPlaylist);
     }
 
-    @Test
+    @Description("Getting a playlist to validate")
+    @Test (description = "Get a Playlist")
     public void shouldBeAbleToGetAPlaylist(){
         Playlist requestPlaylist = playListBuilder("My Playlist 1", "Amits 1st playlist updated", false);
 
@@ -37,7 +40,8 @@ public class PlaylistTests {
         assertPlaylistEqual(responsePlaylist, requestPlaylist);
     }
 
-    @Test
+    @Description("Updating a playlist and validate")
+    @Test (description = "Update a Playlist")
     public void shouldBeAbleToUpdateAPlaylist(){
         Playlist requestPlaylist = playListBuilder("My Playlist 2", "Amits 2nd playlist", false);
 
@@ -45,7 +49,8 @@ public class PlaylistTests {
         assertStatusCode(response.statusCode(), 200);
     }
 
-    @Test
+    @Description("Cannot create Playlist without name")
+    @Test (description = "Cannot create Playlist without name")
     public void shouldNotBeAbleToCreateAPlaylistWithoutName(){
         Playlist requestPlaylist = playListBuilder("", "Playlist without name", false);
 
@@ -56,7 +61,8 @@ public class PlaylistTests {
         assertError(error, 400, "Missing required field: name");
     }
 
-    @Test
+    @Description("Cannot create Playlist with expired token")
+    @Test (description = "Cannot create Playlist without valid token")
     public void shouldNotBeAbleToCreateAPlaylistWithExpiredToken(){
         String invalidToken = "12345";
         Playlist requestPlaylist = playListBuilder("dummy", "Playlist without token", false);
