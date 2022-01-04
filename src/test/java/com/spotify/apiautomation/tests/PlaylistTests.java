@@ -4,19 +4,23 @@ import com.spotify.apiautomation.api.applicationAPI.PlaylistAPI;
 import com.spotify.apiautomation.pojo.Error;
 import com.spotify.apiautomation.pojo.Playlist;
 import com.spotify.apiautomation.utils.DataLoader;
-import io.qameta.allure.Description;
-import io.restassured.http.ContentType;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
-import static com.spotify.apiautomation.api.SpecBuilder.*;
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
+@Epic("Spotify OAuth 2.0")
+@Feature("Playlist API")
 public class PlaylistTests {
 
     @Description("Some test descriptions in detail")
+    @Link("https://example.org")
+    @Link(name = "allure", type = "mylink")
+    @Issue("123")
+    @TmsLink("test-1")
+    @Story("Create playlist story")
     @Test (description = "Create a Playlist")
     public void shouldBeAbleToCreateAPlaylist(){
         Playlist requestPlaylist = playListBuilder("Playlist 4", "my 4th playlist", false);
@@ -50,6 +54,7 @@ public class PlaylistTests {
     }
 
     @Description("Cannot create Playlist without name")
+    @Story("Create playlist story")
     @Test (description = "Cannot create Playlist without name")
     public void shouldNotBeAbleToCreateAPlaylistWithoutName(){
         Playlist requestPlaylist = playListBuilder("", "Playlist without name", false);
@@ -74,6 +79,7 @@ public class PlaylistTests {
         assertError(error, 401, "Invalid access token");
     }
 
+    @Step("Building the Playlist object")
     public Playlist playListBuilder(String name, String description, boolean _public){
         return Playlist.builder()
                 .name(name)
@@ -82,16 +88,19 @@ public class PlaylistTests {
                 .build();
     }
 
+    @Step("Comparing Request and Response Playlists")
     public void assertPlaylistEqual(Playlist responsePlaylist, Playlist requestPlaylist){
         assertThat(responsePlaylist.getName(), equalTo(requestPlaylist.getName()));
         assertThat(responsePlaylist.getDescription(), equalTo(requestPlaylist.getDescription()));
         assertThat(responsePlaylist.get_public(), equalTo(requestPlaylist.get_public()));
     }
 
+    @Step("Asserting status code")
     public void assertStatusCode(int actualStatusCode, int expectedStatusCode){
         assertThat(actualStatusCode, equalTo(expectedStatusCode));
     }
 
+    @Step("Asserting expected error code")
     public void assertError(Error responseError, int expectedStatusCode, String expectedErrorMsg){
         assertThat(responseError.getErrorInner().getStatus(), equalTo(expectedStatusCode));
         assertThat(responseError.getErrorInner().getMessage(), equalTo(expectedErrorMsg));
