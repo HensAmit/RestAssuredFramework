@@ -8,6 +8,7 @@ import io.qameta.allure.*;
 import io.restassured.response.Response;
 import org.testng.annotations.Test;
 
+import static com.spotify.apiautomation.api.StatusCode.*;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.*;
 
@@ -26,7 +27,7 @@ public class PlaylistTests {
         Playlist requestPlaylist = playListBuilder("Playlist 4", "my 4th playlist", false);
 
         Response response = PlaylistAPI.post(requestPlaylist);
-        assertStatusCode(response.statusCode(), 201);
+        assertStatusCode(response.statusCode(), CODE_201.code);
 
         Playlist responsePlaylist = response.as(Playlist.class);
         assertPlaylistEqual(responsePlaylist, requestPlaylist);
@@ -38,7 +39,7 @@ public class PlaylistTests {
         Playlist requestPlaylist = playListBuilder("My Playlist 1", "Amits 1st playlist updated", false);
 
         Response response = PlaylistAPI.get(DataLoader.getInstance().getGetPlaylistId());
-        assertStatusCode(response.statusCode(), 200);
+        assertStatusCode(response.statusCode(), CODE_200.code);
 
         Playlist responsePlaylist = response.as(Playlist.class);
         assertPlaylistEqual(responsePlaylist, requestPlaylist);
@@ -50,7 +51,7 @@ public class PlaylistTests {
         Playlist requestPlaylist = playListBuilder("My Playlist 2", "Amits 2nd playlist", false);
 
         Response response = PlaylistAPI.update(requestPlaylist, DataLoader.getInstance().getUpdatePlaylistId());
-        assertStatusCode(response.statusCode(), 200);
+        assertStatusCode(response.statusCode(), CODE_200.code);
     }
 
     @Description("Cannot create Playlist without name")
@@ -60,10 +61,10 @@ public class PlaylistTests {
         Playlist requestPlaylist = playListBuilder("", "Playlist without name", false);
 
         Response response = PlaylistAPI.post(requestPlaylist);
-        assertStatusCode(response.statusCode(), 400);
+        assertStatusCode(response.statusCode(), CODE_400.code);
 
         Error error = response.as(Error.class);
-        assertError(error, 400, "Missing required field: name");
+        assertError(error, CODE_400.code, CODE_400.msg);
     }
 
     @Description("Cannot create Playlist with expired token")
@@ -73,10 +74,10 @@ public class PlaylistTests {
         Playlist requestPlaylist = playListBuilder("dummy", "Playlist without token", false);
 
         Response response = PlaylistAPI.post(requestPlaylist, invalidToken);
-        assertStatusCode(response.statusCode(), 401);
+        assertStatusCode(response.statusCode(), CODE_401.code);
 
         Error error = response.as(Error.class);
-        assertError(error, 401, "Invalid access token");
+        assertError(error, CODE_401.code, CODE_401.msg);
     }
 
     @Step("Building the Playlist object")
