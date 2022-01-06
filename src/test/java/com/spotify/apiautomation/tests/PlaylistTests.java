@@ -14,7 +14,7 @@ import static org.hamcrest.MatcherAssert.*;
 
 @Epic("Spotify OAuth 2.0")
 @Feature("Playlist API")
-public class PlaylistTests {
+public class PlaylistTests extends BaseTest{
 
     @Description("Some test descriptions in detail")
     @Link("https://example.org")
